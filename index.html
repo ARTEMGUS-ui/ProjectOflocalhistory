@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Туристическая карта Липецкой области</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2c5f2d;
+            --secondary-color: #97bc62;
+            --accent-color: #d4a574;
+            --text-dark: #2c3e50;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            list-style: none;
+            padding: 1rem;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 1.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 60px;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(44,95,45,0.7), rgba(151,188,98,0.7)),
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s;
+            animation-fill-mode: both;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--accent-color);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            animation: fadeInUp 1s ease 0.4s;
+            animation-fill-mode: both;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--accent-color);
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        /* About Section */
+        .about {
+            background: var(--bg-light);
+        }
+
+        .about-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-item i {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        /* Interactive Map Section */
+        .map-section {
+            background: var(--white);
+        }
+
+        .map-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-light);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .map-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--white);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .tab-btn.active,
+        .tab-btn:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .map-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .map-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .map-card-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(44,95,45,0.6), rgba(151,188,98,0.6));
+        }
+
+        .map-card-image i {
+            position: relative;
+            z-index: 1;
+            font-size: 4rem;
+            color: var(--white);
+        }
+
+        .map-card-content {
+            padding: 1.5rem;
+        }
+
+        .map-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .map-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .map-card .location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* Attractions Section */
+        .attractions {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .attractions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .attraction-item {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .attraction-item:hover {
+            transform: scale(1.02);
+        }
+
+        .attraction-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .attraction-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent-color);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 2;
+        }
+
+        .attraction-content {
+            padding: 2rem;
+        }
+
+        .attraction-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .attraction-content ul {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .attraction-content li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .attraction-content li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        /* Gallery Section */
+        .gallery {
+            background: var(--white);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            height: 300px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(44,95,45,0.9), transparent);
+            color: var(--white);
+            padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        /* Routes Section */
+        .routes {
+            background: var(--white);
+        }
+
+        .routes-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .route-card {
+            background: var(--bg-light);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--primary-color);
+            transition: var(--transition);
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .route-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateX(10px);
+        }
+
+        .route-image {
+            width: 100%;
+            height: 200px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .route-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .route-duration {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 0.3rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Info Section */
+        .info {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .info .section-title {
+            color: var(--white);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .info-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .info-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+
+        .info-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        footer a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--white);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 10;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--accent-color);
+            color: var(--white);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+            
+            nav li {
+                margin: 0.5rem;
+            }
+            
+            section {
+                padding: 3rem 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .route-card {
+                grid-template-columns: 1fr;
+            }
+
+            .route-image {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#home">Главная</a></li>
+            <li><a href="#about">О регионе</a></li>
+            <li><a href="#map">Карта</a></li>
+            <li><a href="#attractions">Достопримечательности</a></li>
+            <li><a href="#gallery">Галерея</a></li>
+            <li><a href="#routes">Маршруты</a></li>
+            <li><a href="#info">Информация</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Туристическая карта Липецкой области</h1>
+            <p>Откройте для себя жемчужины Центрального Черноземья</p>
+            <a href="#map" class="btn">Исследовать регион</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <h2 class="section-title">О регионе</h2>
+        <div class="about-content scroll-reveal">
+            <p>Липецкая область расположена в самом сердце Центрального Черноземья России и представляет собой уникальный регион с богатым природным, историческим и культурным наследием.</p>
+            <br>
+            <p>Территория области обладает значительным туристическим потенциалом, включающим живописные ландшафты, памятники архитектуры, древние города и современные развлекательные комплексы.</p>
+            
+            <div class="about-stats">
+                <div class="stat-item">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span class="stat-number">24 047</span>
+                    <span>км² площадь</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-tree"></i>
+                    <span class="stat-number">188</span>
+                    <span>ООПТ</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-landmark"></i>
+                    <span class="stat-number">50+</span>
+                    <span>памятников</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <span class="stat-number">1 млн</span>
+                    <span>туристов в год</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Map Section -->
+    <section class="map-section" id="map">
+        <h2 class="section-title">Интерактивная карта</h2>
+        <div class="map-container scroll-reveal">
+            <div class="map-tabs">
+                <button class="tab-btn active" data-filter="all">Все объекты</button>
+                <button class="tab-btn" data-filter="nature">Природа</button>
+                <button class="tab-btn" data-filter="culture">Культура</button>
+                <button class="tab-btn" data-filter="history">История</button>
+            </div>
+            
+            <div class="map-grid" id="mapGrid">
+                <!-- Cards will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Attractions Section -->
+    <section class="attractions" id="attractions">
+        <h2 class="section-title">Основные достопримечательности</h2>
+        <div class="attractions-grid">
+            <div class="attraction-item scroll-reveal">
+                <div class="attraction-image" style="background-image: url('https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/56c80d060-f318-4492-ae95-2617497d153c8909.png');">
+                    <span class="attraction-badge">Топ-1</span>
+                </div>
+                <div class="attraction-content">
+                    <h3>Парк «Кудыкина гора»</h3>
+                    <p>Крупнейший туристический объект области площадью 350-500 га на берегу реки Дон. Уникальное сочетание природных ландшафтов и авторских арт-объектов.</p>
+                    <ul>
+                        <li>Легендарный дракон, извергающий огонь</li>
+                        <li>Древнерусская крепость</li>
+                        <li>Храм Николая Чудотворца</li>
+                        <li>Контактный зоопарк</li>
+                        <li>Источник «Глазной ключ»</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="attraction-item scroll-reveal">
+                <div class="attraction-image" style="background-image: url('https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/96c80d060-f318-4492-ae95-2617497d153c3483.png');">
+                    <span class="attraction-badge">Усадьба</span>
+                </div>
+                <div class="attraction-content">
+                    <h3>Усадьба «Скорняково-Архангельское»</h3>
+                    <p>Восстановленный усадебный комплекс XVIII-XIX веков — образец русской усадебной культуры.</p>
+                    <ul>
+                        <li>Господский дом</li>
+                        <li>Парк с прудами</li>
+                        <li>Храм Архангела Михаила</li>
+                        <li>Ресторан русской кухни</li>
+                        <li>Фестивали и мероприятия</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="attraction-item scroll-reveal">
+                <div class="attraction-image" style="background-image: url('https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/76c80d060-f318-4492-ae95-2617497d153c3216.png');">
+                    <span class="attraction-badge">Заповедник</span>
+                </div>
+                <div class="attraction-content">
+                    <h3>Заповедник «Галичья гора»</h3>
+                    <p>Один из старейших и самых маленьких заповедников России, основанный в 1925 году.</p>
+                    <ul>
+                        <li>Реликтовая растительность</li>
+                        <li>Уникальные геологические обнажения</li>
+                        <li>Богатая орнитофауна</li>
+                        <li>Музей природы</li>
+                        <li>Научные исследования</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="attraction-item scroll-reveal">
+                <div class="attraction-image" style="background-image: url('https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/36c80d060-f318-4492-ae95-2617497d153c7896.png');">
+                    <span class="attraction-badge">Древний город</span>
+                </div>
+                <div class="attraction-content">
+                    <h3>Город Елец</h3>
+                    <p>Один из древнейших городов России (основан в 1146 году), сохранивший уникальный исторический облик.</p>
+                    <ul>
+                        <li>Вознесенский собор XVII века</li>
+                        <li>Знаменский женский монастырь</li>
+                        <li>Историческая застройка</li>
+                        <li>Музеи города</li>
+                        <li>Великокняжеская церковь</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="attraction-item scroll-reveal">
+                <div class="attraction-image" style="background-image: url('https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/36c80d060-f318-4492-ae95-2617497d153c6114.png');">
+                    <span class="attraction-badge">Монастырь</span>
+                </div>
+                <div class="attraction-content">
+                    <h3>Задонский монастырь</h3>
+                    <p>Один из крупнейших духовных центров России, основанный в XVII веке.</p>
+                    <ul>
+                        <li>Собор Рождества Богородицы</li>
+                        <li>Владимирский собор</li>
+                        <li>Мощи святителя Тихона Задонского</li>
+                        <li>Святые источники</li>
+                        <li>Паломнические туры</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="attraction-item scroll-reveal">
+                <div class="attraction-image" style="background-image: url('https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/46c80d060-f318-4492-ae95-2617497d153c7118.png');">
+                    <span class="attraction-badge">Активный отдых</span>
+                </div>
+                <div class="attraction-content">
+                    <h3>Воргольские скалы</h3>
+                    <p>Живописный природный комплекс, популярный среди любителей активного туризма и скалолазания.</p>
+                    <ul>
+                        <li>Скалы высотой до 30 метров</li>
+                        <li>Маршруты для альпинистов</li>
+                        <li>Живописные пейзажи</li>
+                        <li>Места для фотосессий</li>
+                        <li>Экотропы</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+        <h2 class="section-title">Фотогалерея региона</h2>
+        <div class="gallery-grid scroll-reveal">
+            <div class="gallery-item">
+                <img src="https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/16c80d060-f318-4492-ae95-2617497d153c3477.png" alt="Природа Липецкой области">
+                <div class="gallery-overlay">
+                    <h3>Природные ландшафты</h3>
+                    <p>Живописные виды лесостепной зоны</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/36c80d060-f318-4492-ae95-2617497d153c7251.png" alt="Река Дон">
+                <div class="gallery-overlay">
+                    <h3>Река Дон</h3>
+                    <p>Главная водная артерия региона</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/06c80d060-f318-4492-ae95-2617497d153c6750.png" alt="Заповедник Галичья гора">
+                <div class="gallery-overlay">
+                    <h3>Уникальная фауна</h3>
+                    <p>Редкие виды птиц и животных</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/86c80d060-f318-4492-ae95-2617497d153c1073.png" alt="Воргольские скалы">
+                <div class="gallery-overlay">
+                    <h3>Воргольская долина</h3>
+                    <p>Зелёные холмы и река</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/66c80d060-f318-4492-ae95-2617497d153c5853.png" alt="Вид со скал">
+                <div class="gallery-overlay">
+                    <h3>Панорамные виды</h3>
+                    <p>Незабываемые пейзажи</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/66c80d060-f318-4492-ae95-2617497d153c1162.png" alt="Река Дон">
+                <div class="gallery-overlay">
+                    <h3>Донские просторы</h3>
+                    <p>Величественная река</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Routes Section -->
+    <section class="routes" id="routes">
+        <h2 class="section-title">Туристические маршруты</h2>
+        <div class="routes-container scroll-reveal">
+            <div class="route-card">
+                <img src="https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/66c80d060-f318-4492-ae95-2617497d153c9673.png" alt="Золотое кольцо" class="route-image">
+                <div>
+                    <h3><i class="fas fa-route"></i> Золотое кольцо Липецкой области <span class="route-duration">3-5 дней</span></h3>
+                    <p><strong>День 1:</strong> Липецк — осмотр центра города, Нижнего парка, минеральных источников</p>
+                    <p><strong>День 2:</strong> Елец — исторический центр, соборы, музеи</p>
+                    <p><strong>День 3:</strong> Задонск — монастырь, святые источники</p>
+                    <p><strong>День 4:</strong> Усадьба «Скорняково-Архангельское»</p>
+                    <p><strong>День 5:</strong> Парк «Кудыкина гора»</p>
+                </div>
+            </div>
+
+            <div class="route-card">
+                <img src="https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/46c80d060-f318-4492-ae95-2617497d153c7964.png" alt="Духовные истоки" class="route-image">
+                <div>
+                    <h3><i class="fas fa-pray"></i> Духовные истоки <span class="route-duration">2-3 дня</span></h3>
+                    <p>Паломнический маршрут по святым местам области:</p>
+                    <ul>
+                        <li>Задонский монастырь</li>
+                        <li>Елецкие монастыри</li>
+                        <li>Святые источники региона</li>
+                        <li>Храм в Скорняково-Архангельском</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="route-card">
+                <img src="https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/36c80d060-f318-4492-ae95-2617497d153c1422.png" alt="Экотур" class="route-image">
+                <div>
+                    <h3><i class="fas fa-leaf"></i> Экологический тур <span class="route-duration">2-4 дня</span></h3>
+                    <p>Для любителей природы и активного отдыха:</p>
+                    <ul>
+                        <li>Заповедник «Галичья гора»</li>
+                        <li>Воргольские скалы</li>
+                        <li>Природный парк «Олений»</li>
+                        <li>Кураповские скалы</li>
+                        <li>Матырское водохранилище</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="route-card">
+                <img src="" alt="Семейный отдых" class="route-image">
+                <div>
+                    <h3><i class="fas fa-users"></i> Семейный уикенд <span class="route-duration">2 дня</span></h3>
+                    <p>Идеальный маршрут для отдыха с детьми:</p>
+                    <ul>
+                        <li>Парк «Кудыкина гора» (дракон, крепость, зоопарк)</li>
+                        <li>Археологический парк «Аргамач»</li>
+                        <li>Липецкий зоопарк</li>
+                        <li>Нижний парк в Липецке</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info" id="info">
+        <h2 class="section-title">Полезная информация</h2>
+        <div class="info-grid scroll-reveal">
+            <div class="info-card">
+                <i class="fas fa-car"></i>
+                <h3>Как добраться</h3>
+                <p>Ж/д сообщение с Москвой, аэропорт в Липецке, развитая сеть автодорог</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-bed"></i>
+                <h3>Размещение</h3>
+                <p>Гостиницы, парк-отели, глэмпинги, частные усадьбы</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-utensils"></i>
+                <h3>Питание</h3>
+                <p>Рестораны русской кухни, кафе, гастрономические туры</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-calendar-alt"></i>
+                <h3>Лучшее время</h3>
+                <p>Май-сентябрь для экскурсий, круглый год для культурного туризма</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Туристическая карта Липецкой области. Все права защищены.</p>
+        <p>Информационный портал о туризме в регионе</p>
+        <p style="margin-top: 1rem;">
+            <a href="#"><i class="fas fa-envelope"></i> Связаться с нами</a> | 
+            <a href="#"><i class="fas fa-phone"></i> +7 (4742) XX-XX-XX</a>
+        </p>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data for map cards with REAL images from Lipetsk Oblast
+        const locations = [
+            {
+                id: 1,
+                name: 'Парк «Кудыкина гора»',
+                category: 'nature',
+                icon: 'fa-dragon',
+                image: 'https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/56c80d060-f318-4492-ae95-2617497d153c8909.png',
+                description: 'Крупнейший туристический объект области с драконом и крепостью',
+                location: 'Липецкий район',
+                details: 'Парк площадью 350-500 га на берегу реки Дон. Включает древнерусскую крепость, храм, контактный зоопарк, источник и знаменитого дракона.'
+            },
+            {
+                id: 2,
+                name: 'Усадьба «Скорняково-Архангельское»',
+                category: 'culture',
+                icon: 'fa-landmark',
+                image: 'https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/96c80d060-f318-4492-ae95-2617497d153c3483.png',
+                description: 'Восстановленная усадьба XVIII-XIX веков',
+                location: 'с. Скорняково',
+                details: 'Образец русской усадебной культуры с господским домом, парком с прудами, храмом и рестораном русской кухни.'
+            },
+            {
+                id: 3,
+                name: 'Заповедник «Галичья гора»',
+                category: 'nature',
+                icon: 'fa-mountain',
+                image: 'https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/76c80d060-f318-4492-ae95-2617497d153c3216.png',
+                description: 'Старейший заповедник России (1925)',
+                location: 'Задонский район',
+                details: 'Уникальный заповедник с реликтовой растительностью, геологическими обнажениями и музеем природы.'
+            },
+            {
+                id: 4,
+                name: 'Город Елец',
+                category: 'history',
+                icon: 'fa-church',
+                image: 'https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/36c80d060-f318-4492-ae95-2617497d153c7896.png',
+                description: 'Древнейший город (основан в 1146)',
+                location: 'г. Елец',
+                details: 'Исторический город с Вознесенским собором XVII века, монастырями и уникальной застройкой.'
+            },
+            {
+                id: 5,
+                name: 'Задонский монастырь',
+                category: 'culture',
+                icon: 'fa-pray',
+                image: 'https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/36c80d060-f318-4492-ae95-2617497d153c6114.png',
+                description: 'Крупнейший духовный центр',
+                location: 'г. Задонск',
+                details: 'Рождество-Богородицкий мужской монастырь XVII века с мощами святителя Тихона Задонского.'
+            },
+            {
+                id: 6,
+                name: 'Воргольские скалы',
+                category: 'nature',
+                icon: 'fa-hiking',
+                image: 'https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/46c80d060-f318-4492-ae95-2617497d153c7118.png',
+                description: 'Популярное место для скалолазания',
+                location: 'Елецкий район',
+                details: 'Скалы высотой до 30 метров, привлекающие альпинистов и любителей активного отдыха.'
+            },
+            {
+                id: 7,
+                name: 'Музей-усадьба Бунина «Рязанка»',
+                category: 'culture',
+                icon: 'fa-book',
+                image: 'https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/46c80d060-f318-4492-ae95-2617497d153c3581.png',
+                description: 'Мемориальный комплекс писателя',
+                location: 'с. Рязанка',
+                details: 'Усадьба первого русского лауреата Нобелевской премии по литературе И.А. Бунина.'
+            },
+            {
+                id: 8,
+                name: 'Археологический парк «Аргамач»',
+                category: 'history',
+                icon: 'fa-fort-awesome',
+                image: 'https://image.qwenlm.ai/public_source/cff93d94-d688-4192-81dc-e60c0fa93383/36c80d060-f318-4492-ae95-2617497d153c4494.png',
+                description: 'Реконструкция древнерусской крепости',
+                location: 'Елецкий район',
+                details: 'Парк с воссозданными укреплениями, жилищами и предметами быта древнерусского периода.'
+            }
+        ];
+
+        // Generate map cards
+        function generateCards(filter = 'all') {
+            const grid = document.getElementById('mapGrid');
+            grid.innerHTML = '';
+            
+            const filtered = filter === 'all' ? locations : locations.filter(l => l.category === filter);
+            
+            filtered.forEach(location => {
+                const card = document.createElement('div');
+                card.className = 'map-card';
+                card.onclick = () => showModal(location);
+                card.innerHTML = `
+                    <div class="map-card-image" style="background-image: url('${location.image}')">
+                        <i class="fas ${location.icon}"></i>
+                    </div>
+                    <div class="map-card-content">
+                        <h3>${location.name}</h3>
+                        <p>${location.description}</p>
+                        <div class="location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${location.location}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Tab filtering
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                generateCards(btn.dataset.filter);
+            });
+        });
+
+        // Modal functions
+        function showModal(location) {
+            const modal = document.getElementById('modal');
+            const body = document.getElementById('modalBody');
+            body.innerHTML = `
+                <img src="${location.image}" alt="${location.name}" class="modal-image">
+                <div style="text-align: center; padding: 1rem;">
+                    <i class="fas ${location.icon}" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                    <h2 style="color: var(--primary-color); margin-bottom: 1rem;">${location.name}</h2>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">${location.details}</p>
+                    <div style="margin-top: 2rem; padding: 1rem; background: var(--bg-light); border-radius: 10px;">
+                        <strong><i class="fas fa-map-marker-alt"></i> Расположение:</strong> ${location.location}
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') closeModal();
+        });
+
+        // Scroll reveal animation
+        function reveal() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', reveal);
+        reveal(); // Trigger once on load
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize
+        generateCards();
+    </script>
+</body>
+</html>
